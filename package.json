@@ -15,16 +15,25 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-validator": "^7.2.0",
-    "jsonwebtoken": "^9.0.2",
-    "mini-spotify-azure": "file:"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.0.1"
   },
-  "main": "server.js",
-  "keywords": [],
-  "author": "",
+  "main": "src/server.js",
+  "keywords": [
+    "nodejs",
+    "express",
+    "jwt",
+    "azure",
+    "cosmos-db",
+    "rest-api"
+  ],
+  "author": "Leonardo (timsleo)",
   "license": "ISC",
-  "description": ""
+  "description": "API REST de playlists no estilo Spotify, com Node.js, Express, JWT e Azure Cosmos DB",
+  "engines": {
+    "node": ">=18"
+  }
 }
