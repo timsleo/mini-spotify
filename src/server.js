@@ -1,12 +1,15 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { errorHandler } from './utils/errorHandler.js';
-import database from './config/database.js'; // Use 'import' ao invés de 'require'
-import authRouter from './routes/auth.js'; // Importação das rotas com ESM
+import database from './config/database.js';
+import authRouter from './routes/auth.js';
 import playlistsRouter from './routes/playlists.js';
 import songsRouter from './routes/songs.js';
-dotenv.config();
+if (!process.env.JWT_SECRET) {
+  console.error('JWT_SECRET não definido. Copie .env.example para .env e preencha.');
+  process.exit(1);
+}
 
 const app = express();
 
@@ -20,7 +23,7 @@ const startServer = async () => {
     await database.init();
     
     // Routes
-    app.use('/api/auth', authRouter); // Usando importadas em vez de require
+    app.use('/api/auth', authRouter);
     app.use('/api/playlists', playlistsRouter);
     app.use('/api/songs', songsRouter);
 

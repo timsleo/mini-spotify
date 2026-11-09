@@ -18,21 +18,11 @@ class Playlist {
   static async addSong(playlistId, songId, userId) {
     const containers = database.getContainers();
     try {
-  
-      console.log('Testing playlists container...');
-      const { resources } = await containers.playlists.items.query('SELECT * FROM c').fetchAll();
-      console.log('Playlist found:', resources);
-
-      console.log('Attempting to add song:', songId, 'to playlist:', playlistId);
-      console.log('User ID (partition key):', userId);
-
     // Buscar a playlist no banco
     const { resource: playlist } = await containers.playlists.item(playlistId, userId).read();
-    console.log('Playlist found:', playlist);
 
       // Verificar se a playlist foi encontrada
       if (!playlist) {
-        console.error('Playlist not found for ID:', playlistId);
         throw new Error('Playlist not found');
       }
   
@@ -42,7 +32,6 @@ class Playlist {
   
       // Atualizar a playlist no banco
       const { resource } = await containers.playlists.item(playlistId, userId).replace(playlist);
-      console.log('Playlist updated:', resource); 
       return resource;
     } catch (err) {
       console.error('Error adding song to playlist:', err);

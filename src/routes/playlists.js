@@ -29,9 +29,6 @@ router.post('/:playlistId/songs/:songId', auth, async (req, res) => {
   try {
     const { playlistId, songId } = req.params;
     const userId = req.user.userId;
-    console.log('Received playlistId:', playlistId, 'Type:', typeof playlistId);
-    console.log('Received userId:', userId);
-    console.log('Received songId:', songId, 'Type:', typeof songId);
     const updatedPlaylist = await Playlist.addSong(playlistId, songId, userId);
     res.json(updatedPlaylist);
   } catch (err) {

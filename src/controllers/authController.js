@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import User from '../models/User.js'; // Atualizado para usar import
-import { ErrorResponse } from '../utils/errorHandler.js'; // Atualizado para usar import
+import User from '../models/User.js';
+import { ErrorResponse } from '../utils/errorHandler.js';
 
 const register = async (req, res, next) => {
   const errors = validationResult(req);
@@ -59,15 +59,10 @@ const generateToken = (userId) => {
 
 const updateUser = async (req, res, next) => {
   try {
-    console.log('Update user request received:', req.body);
-    console.log('Authenticated user ID:', req.user.userId);
     const { name, email, password } = req.body;
-    const userId = req.user.userId; // Extraído do token JWT pelo middleware
+    const userId = req.user.userId;
 
-    // Criar um objeto para armazenar os dados a serem atualizados
-    let updatedData = {};
-
-    // Atualizar os campos permitidos
+    const updatedData = {};
     if (name){
       updatedData.name = name;
     } 
@@ -78,24 +73,30 @@ const updateUser = async (req, res, next) => {
       const salt = await bcrypt.genSalt(10);
       updatedData.password = await bcrypt.hash(password, salt);
     }
-    // Adicionar log para verificar o conteúdo de `updatedData`
-    console.log('Updated data before updating user:', updatedData);
 
-    // Verificar se há dados para atualizar
     if (Object.keys(updatedData).length === 0) {
-    return res.status(400).json({ success: false, error: 'No data to update' });
+      return res.status(400).json({ success: false, error: 'No data to update' });
     }
 
-    // Salvar as alterações no banco
     const updatedUser = await User.update(userId, updatedData);
 
+    // Nunca devolver o hash da senha
     res.json({
       success: true,
-      data: updatedData,
+      data: { id: updatedUser.id, name: updatedUser.name, email: updatedUser.email },
     });
   } catch (err) {
     next(err);
   }
 };
 
-export { register, login, updateUser };
+const deleteUser = async (req, res, next) => {
+  try {
+    await User.delete(req.user.userId);
+    res.json({ success: true, message: 'User deleted successfully' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { register, login, updateUser, deleteUser };

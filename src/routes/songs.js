@@ -29,7 +29,7 @@ router.post('/', [auth, [
 
 router.get('/:id', auth, async (req, res) => {
   try {
-    const song = await Song.findById(req.params.id);
+    const song = await Song.findById(req.params.id, req.user.userId);
     if (!song) {
       return res.status(404).json({ message: 'Song not found' });
     }

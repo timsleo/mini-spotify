@@ -16,9 +16,10 @@ class Song {
     return resource;
   }
 
-  static async findById(id) {
+  static async findById(id, userId) {
     const containers = database.getContainers();
-    const { resource } = await containers.songs.item(id).read();
+    // A partition key do container songs é /userId (também garante que a música é do usuário)
+    const { resource } = await containers.songs.item(id, userId).read();
     return resource;
   }
 }
